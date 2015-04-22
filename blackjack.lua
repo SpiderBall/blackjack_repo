@@ -9,7 +9,7 @@ cards_in_hand = {}
 suits = {"hearts", "spades", "clubs", "diamonds"}
 faces = {"2", "3", "4", "5", "6", "7", "8",
                 "9","10","Jack", "King", "Queen", "Ace"}
-debug = true
+debug = false
 
 math.randomseed(os.time())--uses current time as seed
 
@@ -23,7 +23,7 @@ function dealCard(deck) do
 	for c in list_iter(deck) do
 		if c.face == faces[num_face] and c.suit == suits[num_suit] then
 			card_to_deal = c
-			print (card_to_deal.face .." of "..card_to_deal.suit)
+			if debug then print (card_to_deal.face .." of "..card_to_deal.suit) end
 		end
 	end
 
@@ -72,10 +72,8 @@ function createDeck(deck) do
                 value = 9 
             elseif faces[j] == "10" or faces[j] == "Jack" or faces[j]=="Queen" or faces[j]=="King" then
                 value = 10
-            --elseif faces[j]=="Ace" and not(cards_in_hand.value + 11 >= 21) then
-            --    value = 11
             elseif faces[j] == "Ace" then
-                value = 1 
+                value = 11 
             end
 
             card = {face = faces[j], suit = suits[i], value = value}
@@ -90,26 +88,55 @@ end
 
 
 function print_hand()
-	for i in list_iter(cards_in_hand) do
-		if debug then print("in for") end
-		print(i.face.." of "..i.suit.." has a value of "..i.value..".")
+	print("Here is your hand:")
+	for k, v in pairs(cards_in_hand) do 
+		for j, w in pairs(v) do 
+			print(j, w)
+		end
+		print("==============")
 	end
 end
 
+local total_value = function()
+	tvalue = 0
+	for k,v in pairs(cards_in_hand) do
+		for field, in_memory in pairs(v) do
+	--		print(field, in_memory)
+			if field == "value" then
+				tvalue = tvalue + value
+			end
+		end
+	end
+	return tvalue
+end
+
+
 function main() do
     createDeck(deck)
-	print("Dealing...")
 	dealCard(deck)
 	dealCard(deck)
-	print("Here is your hand:")
 	print_hand()	
 	repeat
 		print("Would you like to take a hit, or stay?(any key for hit, s for stay)")
 		input = io.read()
-		if not input == "s" then
+		if not(input == "s") then
 			dealCard(deck)
+			print_hand()
+			print(total_value)
+			if total_value == 21 then
+				print(total_value)
+				print("BLACKJACK!")
+				return
+			elseif tvalue > 21 then
+				print(total_value)
+				print("you lose")
+				return
+			end
+		else 
+			print(total_value)
+			print("you lose")
+			
 		end
-		print_hand()
 	until input == "s"
 end
 end
