@@ -11,13 +11,13 @@ faces = {"2", "3", "4", "5", "6", "7", "8",
                 "9","10","Jack", "King", "Queen", "Ace"}
 debug = true
 
+math.randomseed(os.time())--uses current time as seed
 
 function dealCard(deck) do
 	--needs to randomly give a card that is has not already left the deck
-	math.randomseed(os.time())--uses current time as seed
+
 	num_face = math.random(13)
 	num_suit = math.random(4)
-
 	local card_to_deal = {}
 
 	for c in list_iter(deck) do
@@ -98,17 +98,19 @@ end
 
 function main() do
     createDeck(deck)
+	print("Dealing...")
 	dealCard(deck)
---	dealCard(deck)
-	if debug then print("Here is your hand:") end
-		print_hand()	
-
-	print("Would you like to take a hit, or stay?(y for hit, n for stay)")
-	input = io.read()
-	if input == "y" then
-		dealCard(deck)
+	dealCard(deck)
+	print("Here is your hand:")
+	print_hand()	
+	repeat
+		print("Would you like to take a hit, or stay?(any key for hit, s for stay)")
+		input = io.read()
+		if not input == "s" then
+			dealCard(deck)
+		end
 		print_hand()
-	end
+	until input == "s"
 end
 end
 main()
