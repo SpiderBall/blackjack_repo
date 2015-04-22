@@ -19,10 +19,14 @@ function dealCard(deck) do
 	num_face = math.random(13)
 	num_suit = math.random(4)
 	local card_to_deal = {}
+	tvalue = total_value()
 
 	for c in list_iter(deck) do
 		if c.face == faces[num_face] and c.suit == suits[num_suit] then
 			card_to_deal = c
+			if card_to_deal.face == "Ace" and (tvalue + 11) >21 then 
+				card_to_deal.value = 1
+			end
 			if debug then print (card_to_deal.face .." of "..card_to_deal.suit) end
 		end
 	end
@@ -98,17 +102,17 @@ function print_hand()
 end
 
 function total_value ()
-	total_value = 0
+	totalValue = 0
 	for k,v in pairs(cards_in_hand) do
 		for field, in_memory in pairs(v) do
 			if field == "value" then
 				if debug then print(in_memory) end
-				total_value = total_value + in_memory 
-				if debug then print (total_value) end
+				totalValue = totalValue + in_memory 
+				if debug then print (totalValue) end
 			end
 		end
 	end
-	return total_value
+	return totalValue
 end
 
 
