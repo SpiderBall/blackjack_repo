@@ -75,9 +75,9 @@ function createDeck(deck) do
             elseif faces[j] == "Ace" then
                 value = 11 
             end
+			print(value)
 
             card = {face = faces[j], suit = suits[i], value = value}
-			--print(card.value)
             table.insert(deck,card)
             --when thats done add cards with face suit 
             --and value to the deck of cards
@@ -97,17 +97,18 @@ function print_hand()
 	end
 end
 
-local total_value = function()
-	tvalue = 0
+function total_value ()
+	total_value = 0
 	for k,v in pairs(cards_in_hand) do
 		for field, in_memory in pairs(v) do
-	--		print(field, in_memory)
 			if field == "value" then
-				tvalue = tvalue + value
+				if debug then print(in_memory) end
+				total_value = total_value + in_memory 
+				if debug then print (total_value) end
 			end
 		end
 	end
-	return tvalue
+	return total_value
 end
 
 
@@ -118,22 +119,21 @@ function main() do
 	print_hand()	
 	repeat
 		print("Would you like to take a hit, or stay?(any key for hit, s for stay)")
+		tvalue = total_value()
 		input = io.read()
 		if not(input == "s") then
 			dealCard(deck)
 			print_hand()
-			print(total_value)
-			if total_value == 21 then
-				print(total_value)
+			tvalue = total_value()
+			print(tvalue)
+			if tvalue == 21 then
 				print("BLACKJACK!")
 				return
 			elseif tvalue > 21 then
-				print(total_value)
 				print("you lose")
 				return
 			end
 		else 
-			print(total_value)
 			print("you lose")
 			
 		end
